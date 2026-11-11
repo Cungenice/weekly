@@ -1,0 +1,39 @@
+name: Build weekly market brief draft
+
+on:
+  schedule:
+    # Monday 07:00 Asia/Shanghai (UTC Sunday 23:00)
+    - cron: "0 23 * * 0"
+  workflow_dispatch:
+    inputs:
+      week:
+        description: "ISO week, e.g. 2026-W45; leave blank for latest completed week"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build draft
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          if [ -n "${{ inputs.week }}" ]; then
+            python scripts/build_weekly.py --week "${{ inputs.week }}" --output data/draft.json
+          else
+            python scripts/build_weekly.py --week latest --output data/draft.json
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: weekly-market-brief-draft
+          path: data/draft.json
+          if-no-files-found: error
+          retention-days: 30
+

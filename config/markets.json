@@ -1,0 +1,32 @@
+{
+  "symbols": [
+    {"symbol":"^GSPC","name":"标普 500","group":"美国股指"},
+    {"symbol":"^IXIC","name":"纳斯达克综合","group":"美国股指"},
+    {"symbol":"^NDX","name":"纳斯达克 100","group":"美国股指"},
+    {"symbol":"^DJI","name":"道琼斯工业指数","group":"美国股指"},
+    {"symbol":"^RUT","name":"罗素 2000","group":"美国股指"},
+    {"symbol":"^VIX","name":"VIX","group":"波动率"},
+    {"symbol":"000001.SS","name":"上证指数","group":"中国股指"},
+    {"symbol":"399001.SZ","name":"深证成指","group":"中国股指"},
+    {"symbol":"399006.SZ","name":"创业板指","group":"中国股指"},
+    {"symbol":"^HSI","name":"恒生指数","group":"亚洲股指"},
+    {"symbol":"^N225","name":"日经 225","group":"亚洲股指"},
+    {"symbol":"^KS11","name":"韩国 KOSPI","group":"亚洲股指"},
+    {"symbol":"DX-Y.NYB","name":"美元指数","group":"外汇"},
+    {"symbol":"CNY=X","name":"美元/离岸人民币参考","group":"外汇"},
+    {"symbol":"^TNX","name":"美国 10 年期收益率","group":"利率"},
+    {"symbol":"GC=F","name":"黄金期货","group":"商品"},
+    {"symbol":"CL=F","name":"WTI 原油","group":"商品"},
+    {"symbol":"BTC-USD","name":"比特币","group":"数字资产"},
+    {"symbol":"XLK","name":"信息技术 ETF","group":"行业 ETF"},
+    {"symbol":"XLF","name":"金融 ETF","group":"行业 ETF"},
+    {"symbol":"XLE","name":"能源 ETF","group":"行业 ETF"},
+    {"symbol":"XLV","name":"医疗保健 ETF","group":"行业 ETF"},
+    {"symbol":"XLI","name":"工业 ETF","group":"行业 ETF"},
+    {"symbol":"XLY","name":"可选消费 ETF","group":"行业 ETF"},
+    {"symbol":"XLP","name":"必需消费 ETF","group":"行业 ETF"},
+    {"symbol":"XLU","name":"公用事业 ETF","group":"行业 ETF"},
+    {"symbol":"XLB","name":"材料 ETF","group":"行业 ETF"},
+    {"symbol":"XLRE","name":"房地产 ETF","group":"行业 ETF"}
+  ]
+}

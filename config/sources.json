@@ -1,0 +1,23 @@
+{
+  "feeds": [
+    {"name":"Federal Reserve","url":"https://www.federalreserve.gov/feeds/press_all.xml","category":"央行与政策","region":"US"},
+    {"name":"BLS","url":"https://www.bls.gov/feed/bls_latest.rss","category":"宏观数据","region":"US"},
+    {"name":"BEA","url":"https://www.bea.gov/news/current-releases?field_related_product_target_id=All&items_per_page=100","category":"宏观数据","region":"US","kind":"html"},
+    {"name":"SEC Press Releases","url":"https://www.sec.gov/news/pressreleases.rss","category":"监管与公司","region":"US"},
+    {"name":"CFTC","url":"https://www.cftc.gov/RSS/RSSGP.xml","category":"监管与市场结构","region":"US"},
+    {"name":"ECB","url":"https://www.ecb.europa.eu/rss/press.html","category":"央行与政策","region":"EU"},
+    {"name":"中国人民银行","url":"http://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html","category":"央行与政策","region":"CN","kind":"html"},
+    {"name":"国家统计局","url":"https://www.stats.gov.cn/sj/zxfb/","category":"宏观数据","region":"CN","kind":"html"},
+    {"name":"中国证监会","url":"http://www.csrc.gov.cn/csrc/c100028/common_list.shtml","category":"监管与市场结构","region":"CN","kind":"html"},
+    {"name":"新华社经济","url":"https://so.news.cn/getNews?sort=1&keyword=%E7%BB%8F%E6%B5%8E&lang=cn&curPage=1","category":"宏观与公司新闻","region":"CN","kind":"html"},
+    {"name":"CNBC Top News","url":"https://www.cnbc.com/id/100003114/device/rss/rss.html","category":"市场新闻","region":"US"},
+    {"name":"MarketWatch Top Stories","url":"https://feeds.marketwatch.com/marketwatch/topstories/","category":"市场新闻","region":"US"}
+  ],
+  "calendars": [
+    {"name":"美国经济数据发布日历","url":"https://www.bls.gov/schedule/"},
+    {"name":"BEA 发布日历","url":"https://www.bea.gov/news/schedule"},
+    {"name":"美联储日历","url":"https://www.federalreserve.gov/newsevents/calendar.htm"},
+    {"name":"国家统计局日程","url":"https://www.stats.gov.cn/"},
+    {"name":"中国人民银行","url":"http://www.pbc.gov.cn/"}
+  ]
+}

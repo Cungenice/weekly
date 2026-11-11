@@ -1,0 +1,11 @@
+{
+  "sections": [
+    {"id":"overview","title":"本周结论","editorial":true},
+    {"id":"markets","title":"主要市场表现","editorial":false},
+    {"id":"drivers","title":"驱动市场的三件事","editorial":true},
+    {"id":"macro","title":"宏观与政策","editorial":true},
+    {"id":"sectors","title":"行业与主题","editorial":true},
+    {"id":"next_week","title":"下周观察","editorial":true},
+    {"id":"news","title":"新闻候选池","editorial":false}
+  ]
+}

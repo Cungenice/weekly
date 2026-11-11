@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import calendar
 import datetime as dt
 import html
 import json
@@ -16,6 +15,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 ROOT = Path(__file__).resolve().parents[1]
 UA = "market-brief-weekly/1.0 (research digest; contact: configure repository owner)"
@@ -110,13 +110,21 @@ def fetch_news(sources: dict, start: dt.date, end: dt.date, warnings: list):
 
 
 def yahoo_chart(symbol: str, start: dt.date, end: dt.date):
-    params = urllib.parse.urlencode({"period1": int(dt.datetime.combine(start, dt.time.min, dt.timezone.utc).timestamp()), "period2": int(dt.datetime.combine(end + dt.timedelta(days=1), dt.time.min, dt.timezone.utc).timestamp()), "interval": "1d", "events": "history"})
+    # Include the preceding week so the return compares Friday close to Friday close,
+    # rather than Monday close to Friday close.
+    fetch_start = start - dt.timedelta(days=7)
+    params = urllib.parse.urlencode({"period1": int(dt.datetime.combine(fetch_start, dt.time.min, dt.timezone.utc).timestamp()), "period2": int(dt.datetime.combine(end + dt.timedelta(days=1), dt.time.min, dt.timezone.utc).timestamp()), "interval": "1d", "events": "history"})
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(symbol, safe='')}?{params}"
     data = json.loads(fetch(url))
     chart = data.get("chart", {})
     if chart.get("error"):
         raise ValueError(str(chart["error"]))
     result = chart["result"][0]
+    exchange_tz = result.get("meta", {}).get("exchangeTimezoneName") or "UTC"
+    try:
+        zone = ZoneInfo(exchange_tz)
+    except ZoneInfoNotFoundError:
+        zone = dt.timezone.utc
     quote = result["indicators"]["quote"][0]
     adj = result["indicators"].get("adjclose", [{}])[0].get("adjclose", [])
     closes = quote.get("close", [])
@@ -125,11 +133,13 @@ def yahoo_chart(symbol: str, start: dt.date, end: dt.date):
     for i, stamp in enumerate(stamps):
         close = closes[i] if i < len(closes) else None
         if close is not None:
-            observations.append({"date": dt.datetime.fromtimestamp(stamp, dt.timezone.utc).date().isoformat(), "close": close, "adjclose": adj[i] if i < len(adj) else close})
-    if len(observations) < 2:
-        raise ValueError("有效收盘价不足 2 个")
-    first, last = observations[0], observations[-1]
-    return {"observations": observations, "start_close": first["close"], "end_close": last["close"], "change_pct": (last["close"] / first["close"] - 1) * 100, "start_date": first["date"], "end_date": last["date"], "currency": result.get("meta", {}).get("currency"), "exchange_timezone": result.get("meta", {}).get("exchangeTimezoneName")}
+            observations.append({"date": dt.datetime.fromtimestamp(stamp, dt.timezone.utc).astimezone(zone).date().isoformat(), "close": close, "adjclose": adj[i] if i < len(adj) else close})
+    baseline = [x for x in observations if x["date"] < start.isoformat()]
+    weekly = [x for x in observations if start.isoformat() <= x["date"] <= end.isoformat()]
+    if not baseline or not weekly:
+        raise ValueError("周初基准价或周内收盘价不足")
+    first, last = baseline[-1], weekly[-1]
+    return {"observations": weekly, "baseline_close": first["close"], "baseline_date": first["date"], "start_close": weekly[0]["close"], "end_close": last["close"], "change_pct": (last["close"] / first["close"] - 1) * 100, "change_abs": last["close"] - first["close"], "start_date": first["date"], "end_date": last["date"], "currency": result.get("meta", {}).get("currency"), "exchange_timezone": exchange_tz}
 
 
 def fetch_markets(config: dict, start: dt.date, end: dt.date, warnings: list):
@@ -177,7 +187,7 @@ def make_report(week_id: str, start: dt.date, end: dt.date):
         "week_end": end.isoformat(),
         "generated_at": NOW.isoformat(),
         "status": "draft",
-        "summary": "編輯填写：用 2–3 句描述本周市场主线、核心变化与反常信号，并注明数据截止时间。",
+        "summary": "编辑填写：用 2–3 句描述本周市场主线、核心变化与反常信号，并注明数据截止时间。",
         "sections": {
             "drivers": [],
             "macro_commentary": [],
@@ -216,6 +226,7 @@ def main():
         report = make_report(week_id, start, end)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"WEEK_ID={week_id}")
         print(f"写入草稿：{output}")
         print(f"新闻候选：{len(report['news_candidates'])} 条；市场序列：{len(report['markets'])} 条；FRED 序列：{len(report['macro'])} 条")
         print(f"数据警告：{len(report['data_warnings'])} 条")
@@ -227,3 +238,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

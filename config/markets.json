@@ -14,7 +14,7 @@
     {"symbol":"^KS11","name":"韩国 KOSPI","group":"亚洲股指"},
     {"symbol":"DX-Y.NYB","name":"美元指数","group":"外汇"},
     {"symbol":"CNY=X","name":"美元/离岸人民币参考","group":"外汇"},
-    {"symbol":"^TNX","name":"美国 10 年期收益率","group":"利率"},
+    {"symbol":"^TNX","name":"美国 10 年期收益率","group":"利率","change_mode":"bps"},
     {"symbol":"GC=F","name":"黄金期货","group":"商品"},
     {"symbol":"CL=F","name":"WTI 原油","group":"商品"},
     {"symbol":"BTC-USD","name":"比特币","group":"数字资产"},
@@ -30,3 +30,4 @@
     {"symbol":"XLRE","name":"房地产 ETF","group":"行业 ETF"}
   ]
 }
+

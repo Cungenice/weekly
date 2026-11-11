@@ -24,9 +24,10 @@ jobs:
       - name: Build draft
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          WEEK: ${{ inputs.week }}
         run: |
-          if [ -n "${{ inputs.week }}" ]; then
-            python scripts/build_weekly.py --week "${{ inputs.week }}" --output data/draft.json
+          if [ -n "$WEEK" ]; then
+            python scripts/build_weekly.py --week "$WEEK" --output data/draft.json
           else
             python scripts/build_weekly.py --week latest --output data/draft.json
           fi
@@ -36,4 +37,5 @@ jobs:
           path: data/draft.json
           if-no-files-found: error
           retention-days: 30
+
 

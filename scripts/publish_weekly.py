@@ -33,9 +33,6 @@ def main() -> int:
         raise SystemExit("拒绝发布：期号或日期范围不匹配。需要周一至周五，期号格式为 YYYY-Www。")
 
     target = ROOT / "data" / f"{expected_id}.json"
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
     manifest_path = ROOT / "data" / "manifest.json"
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -44,6 +41,8 @@ def main() -> int:
     if not isinstance(manifest, list):
         raise SystemExit("manifest.json 格式错误：应为周报 ID 数组。")
     manifest = sorted(set(manifest + [expected_id]), reverse=True)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"已发布数据：{target}")
     print(f"已更新目录：{manifest_path}")
